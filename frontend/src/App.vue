@@ -40,7 +40,7 @@ export default {
     async cerca() {
       try {
         console.log("Buscando:", this.search); // depuración
-        const response = await axios.get(`http://localhost:8080/api/search`, {params: {
+        const response = await axios.get(`http://localhost:8080/api/test`, {params: {
           search: this.search
         }});
         console.log("Respuesta del backend:", response.data);
