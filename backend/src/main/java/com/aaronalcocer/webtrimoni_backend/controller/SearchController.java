@@ -19,16 +19,17 @@ public class SearchController {
 
     //Generem un endpoint
     @GetMapping("/api/search")
-    public JsonNode getElementsBySearch(@RequestParam String search) {
-        String url = "https://do.diba.cat/api/dataset/patrimoni_cultural/ord-titol/asc/camp-all-like/" + search;
+    public ArrayNode getElementsBySearch(@RequestParam String search) {
+        String url = "https://do.diba.cat/api/dataset/patrimoni_cultural/ord-titol/asc/camp-titol-like/" + search;
         try {
-            //Agafem el JSON en format string
+
             String jsonString = restTemplate.getForObject(url, String.class);
             //Generem un arbre de nodes a partir del JSON per poder manipular facilment
             JsonNode root = objectMapper.readTree(jsonString);
             //Accedim a elements ja que la resta del JSON és informació de l'API
-            JsonNode result = root.path("elements");
-            return result;
+            ArrayNode elements = (ArrayNode) root.path("elements");
+            return elements;
+
         } catch (Exception e) {
             e.printStackTrace();
             return objectMapper.createArrayNode();

@@ -19,7 +19,6 @@
       />
     </div>
 
-    <!-- 👇 AQUÍ SE RENDERIZAN LAS PÁGINAS -->
     <main class="main">
       <router-view />
     </main>
