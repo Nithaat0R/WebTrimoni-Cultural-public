@@ -11,44 +11,46 @@
     </header>
 
     <div class="search-bar">
-      <input type="text" v-model="search" placeholder="Cerca..." @keyup.enter="cerca" />
+      <input
+        type="text"
+        v-model="search"
+        placeholder="Cerca..."
+        @keyup.enter="cerca"
+      />
     </div>
 
+    <!-- 👇 AQUÍ SE RENDERIZAN LAS PÁGINAS -->
     <main class="main">
-      <h1>{{ current.toUpperCase() }}</h1>
-      <p>Aquí pots començar a construir la teva web amb Vue.</p>
+      <router-view />
     </main>
   </div>
 </template>
 
 <script>
-import axios from "axios";
-
 export default {
   name: "App",
   data() {
     return {
-      current: "inici",
       search: "",
-      resultats: [],
     };
   },
   methods: {
     go(section) {
-      this.current = section;
+      if (section == "inici"){
+        this.$router.push({
+          name: "home"
+        })
+      }
+      console.log("Navegación:", section);
+      
     },
-    async cerca() {
-      try {
-        console.log("Buscando:", this.search); // depuración
-        const response = await axios.get(`http://localhost:8080/api/search`, {params: {
-          search: this.search
-        }});
-        console.log("Respuesta del backend:", response.data);
-        this.resultats = response.data;
-      } catch (error) {
-        console.error("Error al cercar", error);
-  }
-}
+    cerca() {
+      if (!this.search) return;
+      this.$router.push({
+        name: "search",
+        query: { q: this.search },
+      });
+    },
   },
 };
 </script>
@@ -93,6 +95,7 @@ nav button:hover {
 .main {
   padding: 20px;
 }
+
 .search-bar {
   padding: 20px;
   background: #fff;
@@ -106,5 +109,4 @@ nav button:hover {
   border: 1px solid #ccc;
   border-radius: 6px;
 }
-
 </style>

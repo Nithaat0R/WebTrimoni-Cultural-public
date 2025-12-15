@@ -19,86 +19,16 @@ public class SearchController {
 
     //Generem un endpoint
     @GetMapping("/api/search")
-    public ArrayNode getElementsBySearch(@RequestParam String search) {
+    public JsonNode getElementsBySearch(@RequestParam String search) {
+        String url = "https://do.diba.cat/api/dataset/patrimoni_cultural/ord-titol/asc/camp-all-like/" + search;
         try {
-
-            ArrayNode result = (ArrayNode) getElementsByTitle(search);
-            ArrayNode patrimoniPerMunicipi = (ArrayNode) getElementsByTown(search).get("elements");
-
-            for (JsonNode elem : patrimoniPerMunicipi){
-
-            }
-
-
-            ArrayNode patrimoniPerDescripcio = (ArrayNode) getElementsByDescripton(search).get("elements");
-
-            
-
-            return result;
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return objectMapper.createArrayNode();
-        }
-    }
-
-    public ArrayNode getElementsByTitle(String search) {
-        //Definim la URL de l'API 
-        String url = "https://do.diba.cat/api/dataset/patrimoni_cultural/ord-titol/asc/camp-titol-like/" + search;
-
-        try {
-
             //Agafem el JSON en format string
             String jsonString = restTemplate.getForObject(url, String.class);
             //Generem un arbre de nodes a partir del JSON per poder manipular facilment
             JsonNode root = objectMapper.readTree(jsonString);
             //Accedim a elements ja que la resta del JSON és informació de l'API
-            ArrayNode elements = (ArrayNode) root.path("elements");
-
-            return elements;
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return objectMapper.createArrayNode();
-        }
-    }
-
-    public ArrayNode getElementsByTown(String search) {
-        //Definim la URL de l'API 
-        String url = "https://do.diba.cat/api/dataset/patrimoni_cultural/ord-titol/asc/camp-municipi_nom-like/" + search;
-
-        try {
-
-            //Agafem el JSON en format string
-            String jsonString = restTemplate.getForObject(url, String.class);
-            //Generm un arbre de nodes a partir del JSON per poder manipular facilment
-            JsonNode root = objectMapper.readTree(jsonString);
-            //Accedim a elements ja que la resta del JSON és informació de l'API
-            ArrayNode elements = (ArrayNode) root.path("elements");
-
-            return elements;
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return objectMapper.createArrayNode();
-        }
-    }
-    
-    public ArrayNode getElementsByDescripton(String search) {
-        //Definim la URL de l'API 
-        String url = "https://do.diba.cat/api/dataset/patrimoni_cultural/ord-titol/asc/camp-descripcio-like/" + search;
-
-        try {
-
-            //Agafem el JSON en format string
-            String jsonString = restTemplate.getForObject(url, String.class);
-            //Generm un arbre de nodes a partir del JSON per poder manipular facilment
-            JsonNode root = objectMapper.readTree(jsonString);
-            //Accedim a elements ja que la resta del JSON és informació de l'API
-            ArrayNode elements = (ArrayNode) root.path("elements");
-
-            return elements;
-
+            JsonNode result = root.path("elements");
+            return result;
         } catch (Exception e) {
             e.printStackTrace();
             return objectMapper.createArrayNode();
