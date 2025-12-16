@@ -53,6 +53,13 @@ export default {
         this.loading = false;
       }
     },
+    go(id) {
+    console.log("CLICK EN:", id);
+    this.$router.push({
+      name: "patrimoni",
+      query: { id }
+    });
+  }
   },
 };
 </script>

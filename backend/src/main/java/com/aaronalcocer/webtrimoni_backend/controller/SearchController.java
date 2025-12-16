@@ -20,7 +20,7 @@ public class SearchController {
     //Generem un endpoint
     @GetMapping("/api/search")
     public ArrayNode getElementsBySearch(@RequestParam String search) {
-        String url = "https://do.diba.cat/api/dataset/patrimoni_cultural/ord-titol/asc/camp-titol-like/" + search;
+        String url = "https://do.diba.cat/api/dataset/patrimoni_cultural/ord-titol/asc/camp-all-like/" + search;
         try {
 
             String jsonString = restTemplate.getForObject(url, String.class);
