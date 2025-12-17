@@ -39,9 +39,12 @@ export default {
         this.$router.push({
           name: "home"
         })
+      }else if (section == "comarca"){
+        this.$router.push({
+          name: "comarques"
+        })
       }
       console.log("Navegación:", section);
-      
     },
     cerca() {
       if (!this.search) return;
