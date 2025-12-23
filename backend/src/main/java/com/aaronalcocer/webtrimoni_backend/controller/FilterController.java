@@ -11,34 +11,43 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
-// Aquest controlador filtrarà per diferents variables, filtre portara el tipus de filtre mentre que el parametre data portara amb que haurem de filtrar.
+// Aquest controlador filtrarà per diferents variables, filtre portara el tipus
+// de filtre mentre que el parametre data portara amb que haurem de filtrar.
 public class FilterController {
 
     private final RestTemplate restTemplate = new RestTemplate();
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    //Generem un endpoint
+    // Generem un endpoint
     @GetMapping("/api/filtre")
-    public ObjectNode getFilter(@RequestParam String id) {
+    public ObjectNode getFilter(@RequestParam String filtre, @RequestParam String data) {
 
-    String url = "https://do.diba.cat/api/dataset/patrimoni_cultural/camp-id/" + id;
+        String url = "";
 
-    try {
-        String jsonString = restTemplate.getForObject(url, String.class);
-        JsonNode root = objectMapper.readTree(jsonString);
+        switch (filtre) {
+            case ("comarca"):
+                url = "https://do.diba.cat/api/dataset/patrimoni_cultural/camp-rel_comarca/" + data;
+            case("estil"):
+        }
 
-        ArrayNode elements = (ArrayNode) root.path("elements");
+        
+        try {
+            String jsonString = restTemplate.getForObject(url, String.class);
+            JsonNode root = objectMapper.readTree(jsonString);
 
-        if (elements.isEmpty()) {
+            ArrayNode elements = (ArrayNode) root.path("elements");
+
+            if (elements.isEmpty()) {
+                return objectMapper.createObjectNode();
+            }
+
+            return (ObjectNode) elements.get(0);
+
+        } catch (Exception e) {
+            e.printStackTrace();
             return objectMapper.createObjectNode();
         }
 
-        return (ObjectNode) elements.get(0);
-
-    } catch (Exception e) {
-        e.printStackTrace();
-        return objectMapper.createObjectNode();
     }
-}
 
 }

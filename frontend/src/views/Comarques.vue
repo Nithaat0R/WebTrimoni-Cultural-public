@@ -6191,7 +6191,9 @@ export default {
     seleccionar(codi) {
       this.$router.push({
         name: "filtre",
-        query: { comarca: codi }
+        query: { 
+          filtre: comarca,
+          data: codi }
       });
     }
   }

@@ -3,6 +3,7 @@ import Home from "@/views/Home.vue";
 import Resultats from "@/views/Resultats.vue";
 import InfoPatrimoni from "@/views/InfoPatrimoni.vue";
 import Comarques from "@/views/Comarques.vue";
+import Filtre from "@/views/Filtre.vue";
 
 const routes = [
   {
@@ -25,6 +26,12 @@ const routes = [
     path: "/comarques",
     name: "comarques",
     component: Comarques,
+    props: true,
+  },
+  {
+    path: "/filtre",
+    name: "filtre",
+    component: Filtre,
     props: true,
   },
 ];
