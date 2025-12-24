@@ -20,34 +20,31 @@ public class FilterController {
 
     // Generem un endpoint
     @GetMapping("/api/filtre")
-    public ObjectNode getFilter(@RequestParam String filtre, @RequestParam String data) {
+    public ArrayNode getFilter(@RequestParam String filtre, @RequestParam String data) {
 
         String url = "";
 
         switch (filtre) {
             case ("comarca"):
-                url = "https://do.diba.cat/api/dataset/patrimoni_cultural/camp-rel_comarca/" + data;
+                url = "https://do.diba.cat/api/dataset/patrimoni_cultural/ord-titol/asc/camp-rel_comarca/" + data;
+            case ("segle"):
+                url = "https://do.diba.cat/api/dataset/patrimoni_cultural/ord-titol/asc/camp-rel_comarca/" + data;
             case("estil"):
+                url = "https://do.diba.cat/api/dataset/patrimoni_cultural/ord-titol/asc/camp-rel_comarca/" + data;
         }
 
         
         try {
             String jsonString = restTemplate.getForObject(url, String.class);
+            //Generem un arbre de nodes a partir del JSON per poder manipular facilment
             JsonNode root = objectMapper.readTree(jsonString);
-
+            //Accedim a elements ja que la resta del JSON és informació de l'API
             ArrayNode elements = (ArrayNode) root.path("elements");
-
-            if (elements.isEmpty()) {
-                return objectMapper.createObjectNode();
-            }
-
-            return (ObjectNode) elements.get(0);
-
+            return elements;
         } catch (Exception e) {
             e.printStackTrace();
-            return objectMapper.createObjectNode();
+            return objectMapper.createArrayNode();
         }
-
     }
 
 }

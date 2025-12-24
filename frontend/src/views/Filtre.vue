@@ -1,6 +1,6 @@
 <template>
   <div class="resultats">
-    <h1>Resultats per "{{ query }}"</h1>
+    <h1>Resultats filtrats per {{$route.query.filtre}}: {{$route.query.nom_filtre}} </h1>
 
     <div v-if="loading">Cercant...</div>
 
@@ -34,8 +34,9 @@ export default {
     };
   },
   mounted() {
-    this.query = this.$route.query.q;
-    if (this.query) {
+    const { filtre, data } = this.$route.query;
+
+    if (filtre && data) {
       this.cerca();
     }
   },
@@ -44,8 +45,12 @@ export default {
       this.loading = true;
       try {
         const response = await axios.get("http://localhost:8080/api/filtre", {
-          params: { filtre: this.query['filtre'], data: this.query['data']},
+          params: {
+            filtre: this.$route.query.filtre,
+            data: this.$route.query.data
+          }
         });
+        console.log(response)
         this.resultats = response.data.elements ?? response.data;
       } catch (e) {
         console.error(e);
@@ -54,12 +59,12 @@ export default {
       }
     },
     go(id) {
-    console.log("CLICK EN:", id);
-    this.$router.push({
-      name: "patrimoni",
-      query: { id }
-    });
-  }
+      console.log("CLICK EN:", id);
+      this.$router.push({
+        name: "patrimoni",
+        query: { id }
+      });
+    }
   },
 };
 </script>
@@ -70,6 +75,7 @@ export default {
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: 16px;
 }
+
 .card {
   background: white;
   padding: 16px;

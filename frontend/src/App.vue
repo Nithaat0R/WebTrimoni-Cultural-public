@@ -43,6 +43,14 @@ export default {
         this.$router.push({
           name: "comarques"
         })
+      }else if (section == "segle"){
+        this.$router.push({
+          name: "segles"
+        })
+      }else if (section == "estil"){
+        this.$router.push({
+          name: "comarques"
+        })
       }
       console.log("Navegación:", section);
     },
