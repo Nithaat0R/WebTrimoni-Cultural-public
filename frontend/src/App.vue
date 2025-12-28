@@ -1,25 +1,31 @@
 <template>
   <div id="app">
-    <header class="header">
-      <button class="logo-btn">LOGO</button>
-      <nav>
-        <button @click="go('inici')">Inici</button>
-        <button @click="go('comarca')">Comarca</button>
-        <button @click="go('segle')">Segle</button>
-        <button @click="go('estil')">Estil</button>
-      </nav>
+    <header class="topbar">
+      <!-- Esquerra del HUD -->
+      <div class="left">
+        <div class="logo">
+          <img src="@/assets/LOGO PATRIMONI.png" alt="Info Patrimoni" class="logo-img" @click="$router.push('/')"/>
+        </div>
+        <nav class="menu">
+          <button @click="$router.push('/')">INICI</button>
+          <button @click="$router.push('/comarques')">COMARCA</button>
+          <button @click="$router.push('/segles')">SEGLE</button>
+          <button @click="$router.push('/estil')">ESTIL</button>
+        </nav>
+      </div>
+      <!-- Dreta del HUD -->
+      <div class="right">
+        <div class="actions">
+          <div class="search">
+            <span class="search-icon">🔍</span>
+            <input type="text" placeholder="Cerca..." v-model="search" @keyup.enter="cerca" />
+          </div>
+
+          <div class="user-icon">👤</div>
+        </div>
+      </div>
     </header>
-
-    <div class="search-bar">
-      <input
-        type="text"
-        v-model="search"
-        placeholder="Cerca..."
-        @keyup.enter="cerca"
-      />
-    </div>
-
-    <main class="main">
+    <main class="content">
       <router-view />
     </main>
   </div>
@@ -34,26 +40,6 @@ export default {
     };
   },
   methods: {
-    go(section) {
-      if (section == "inici"){
-        this.$router.push({
-          name: "home"
-        })
-      }else if (section == "comarca"){
-        this.$router.push({
-          name: "comarques"
-        })
-      }else if (section == "segle"){
-        this.$router.push({
-          name: "segles"
-        })
-      }else if (section == "estil"){
-        this.$router.push({
-          name: "comarques"
-        })
-      }
-      console.log("Navegación:", section);
-    },
     cerca() {
       if (!this.search) return;
       this.$router.push({
@@ -69,54 +55,90 @@ export default {
 body {
   margin: 0;
   font-family: Arial, sans-serif;
-  background: #f5f5f5;
+  background: #ffe0e0;
 }
 
-.header {
+#app {
+  min-height: 100vh;
+}
+
+/* ===== TOP BAR ===== */
+.topbar {
   display: flex;
   align-items: center;
-  gap: 20px;
+  justify-content: space-between;
+  background: #ff6f6f;
   padding: 10px 20px;
-  background: #ffffff;
-  border-bottom: 1px solid #ddd;
+  gap: 20px;
 }
 
-.logo-btn {
-  font-size: 20px;
+.left {
+  display: flex;
+  align-items: center;
+  gap:20px;
+}
+
+.logo-img {
+  height: 60px;
+  width: auto;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+}
+
+/* Menu */
+.menu {
+  display: flex;
+  gap: 10px;
+}
+
+.menu button {
+  background: #ff7f7f;
+  border: none;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
   font-weight: bold;
-  cursor: pointer;
-  background: none;
+}
+
+.menu button:hover {
+  background: #ff5c5c;
+}
+
+/* Actions */
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+/* Search */
+.search {
+  display: flex;
+  align-items: center;
+  background: white;
+  border-radius: 20px;
+  padding: 6px 12px;
+  gap: 6px;
+}
+
+.search input {
   border: none;
+  outline: none;
+  font-size: 14px;
 }
 
-nav button {
-  background: none;
-  border: none;
-  font-size: 16px;
+/* User */
+.user-icon {
+  font-size: 20px;
   cursor: pointer;
-  padding: 8px 12px;
 }
 
-nav button:hover {
-  background: #e0e0e0;
-  border-radius: 5px;
-}
-
-.main {
+/* Content */
+.content {
   padding: 20px;
-}
-
-.search-bar {
-  padding: 20px;
-  background: #fff;
-  border-bottom: 1px solid #ddd;
-}
-
-.search-bar input {
-  width: 100%;
-  padding: 10px;
-  font-size: 16px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
 }
 </style>
