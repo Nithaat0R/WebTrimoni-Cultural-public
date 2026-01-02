@@ -2,19 +2,31 @@
   <div class="resultats">
     <h1>Resultats filtrats per {{$route.query.filtre}}: {{$route.query.nom_filtre}} </h1>
 
-    <div v-if="loading">Cercant...</div>
+    <div v-if="loading" class="loading">Cercant...</div>
 
-    <div v-else>
-      <div v-if="resultats.length === 0">
-        No s'han trobat resultats
-      </div>
+    <div v-else-if="resultats.length === 0" class="empty">
+      No s'han trobat resultats
+    </div>
 
-      <div class="cards">
-        <div @click="go(el.id)" class="card" v-for="el in resultats" :key="el.id">
+    <div class="cards" v-else>
+      <div
+        class="card"
+        v-for="el in resultats"
+        :key="el.id"
+        @click="go(el.id)"
+      >
+        <div class="image">
+          <img
+            v-if="getImatge(el)"
+            :src="getImatge(el)"
+            alt="Imatge patrimoni"
+          />
+          <div v-else class="placeholder">Sense imatge</div>
+        </div>
+
+        <div class="info">
           <h3>{{ el.titol }}</h3>
-          <p>{{ el.municipi_nom }}</p>
-          <p>{{ el.estil }}</p>
-          <a :href="el.url" target="_blank">Veure fitxa</a>
+          <p>📍{{ el.municipi_nom }}</p>
         </div>
       </div>
     </div>
@@ -64,22 +76,103 @@ export default {
         name: "patrimoni",
         query: { id }
       });
-    }
+    },
+    getImatge(el) {
+      if (!el.images || el.images.length === 0) return null;
+      return el.images[0].split("|")[0];
+    }    
   },
 };
 </script>
 
 <style>
-.cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 16px;
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #ffe0e0;
 }
 
-.card {
-  background: white;
-  padding: 16px;
+#app {
+  min-height: 100vh;
+}
+
+/* ===== TOP BAR ===== */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #ff6f6f;
+  padding: 10px 20px;
+  gap: 20px;
+}
+
+.left {
+  display: flex;
+  align-items: center;
+  gap:20px;
+}
+
+.logo-img {
+  height: 60px;
+  width: auto;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+}
+
+/* Menu */
+.menu {
+  display: flex;
+  gap: 10px;
+}
+
+.menu button {
+  background: #ff7f7f;
+  border: none;
+  color: white;
+  padding: 8px 16px;
   border-radius: 8px;
-  border: 1px solid #ddd;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.menu button:hover {
+  background: #ff5c5c;
+}
+
+/* Actions */
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+/* Search */
+.search {
+  display: flex;
+  align-items: center;
+  background: white;
+  border-radius: 20px;
+  padding: 6px 12px;
+  gap: 6px;
+}
+
+.search input {
+  border: none;
+  outline: none;
+  font-size: 14px;
+}
+
+/* User */
+.user-icon {
+  font-size: 20px;
+  cursor: pointer;
+}
+
+/* Content */
+.content {
+  padding: 20px;
 }
 </style>

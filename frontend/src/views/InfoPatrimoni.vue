@@ -1,17 +1,36 @@
 <template>
   <div class="info-wrapper" v-if="element">
-    <div class="card">
+    <div class="info-card">
 
-      <div class="image">
-        <img v-if="primeraImatge" :src="primeraImatge" alt="Imatge del patrimoni" />
+      <div class="info-image">
+        <img v-if="primeraImatge" :src="primeraImatge" class="info-img" alt="Imatge del patrimoni" />
         <div v-else class="placeholder">Sense imatge</div>
       </div>
       <div class="data">
         <h2>{{ element.titol }}</h2>
 
-        <p><strong>Codi:</strong> {{ element.codi_element }}</p>
-        <p><strong>Ubicació:</strong> {{ element.ubicacio }}</p>
-        <p><strong>Segle:</strong> {{ element.centuria }}</p>
+        <div class="info-group">
+          <p><strong>Any:</strong> {{ element.any }}</p>
+          <p><strong>Segle:</strong> {{ element.centuria }}</p>
+          <p><strong>Àmbit de patrimoni:</strong> {{ element.ambit }}</p>
+          <p><strong>Tipologia:</strong> {{ element.tipologia }}</p>
+        </div>
+
+        <div class="info-group">
+          <p><strong>Estil / Època:</strong> {{ element.estil }}</p>
+          <p><strong>Estat de conservació:</strong> {{ element.estat_conservacio }}</p>
+          <p><strong>Accés:</strong> {{ element.acces }}</p>
+          <p><strong>Titularitat:</strong> {{ element.titularitat }}</p>
+        </div>
+
+        <div class="info-group">
+          <p><strong>Ubicació:</strong> {{ element.ubicacio }}</p>
+          <p><strong>Coordenades:</strong> {{ element.latitud }}, {{ element.longitud }}</p>
+        </div>
+
+        <div class="info-group">
+          <p><strong>Número de fitxa:</strong> {{ element.codi_element }}</p>
+        </div>
 
         <div class="desc" v-html="element.descripcio"></div>
       </div>
@@ -71,7 +90,7 @@ export default {
   padding: 20px;
 }
 
-.card {
+.info-card {
   display: flex;
   gap: 20px;
   background: #ff8f8f;
@@ -79,22 +98,53 @@ export default {
   padding: 20px;
 }
 
-.image {
-  width: 240px;
-  height: 180px;
+.info-image {
+  width: 300px;
+  height: 250px;
   background: #fff;
-  border-radius: 10px;
+  border-radius: 12px;
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
+
+  flex-shrink: 0; /* 🔑 ESTA ES LA CLAVE */
 }
 
+
+/* LA IMAGEN */
+.info-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* 🔑 */
+  display: block;
+}
+
+/* Placeholder si no hay imagen */
 .placeholder {
   color: #999;
+  font-size: 14px;
 }
 
+
 .data {
-  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.info-group {
+  padding: 2px;
+  border-radius: 10px;
+}
+
+.info-group p {
+  margin: 3px;
+  font-size: 14px;
+}
+
+.info-group strong {
+  color: #000000;
 }
 
 .desc {

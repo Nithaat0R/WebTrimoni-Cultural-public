@@ -100,11 +100,11 @@ export default {
 
 /* CARD */
 .card {
-  background: #ffffff;
+  background: rgb(255, 243, 243);
   border-radius: 14px;
   overflow: hidden;
   cursor: pointer;
-  border: 2px solid #ffd6d6;
+  border: 2px solid rgba(255, 111, 111, 0.35);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 

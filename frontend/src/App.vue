@@ -21,7 +21,7 @@
             <input type="text" placeholder="Cerca..." v-model="search" @keyup.enter="cerca" />
           </div>
 
-          <div class="user-icon">👤</div>
+          <div class="user-icon" @click="$router.push('/login')">👤</div>
         </div>
       </div>
     </header>
