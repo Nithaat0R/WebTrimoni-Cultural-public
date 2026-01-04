@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 // Aquest controlador retornarà els patrimonis cercats a través del web.
+@CrossOrigin(origins = "http://localhost:5173")
 public class SearchController {
 
     private final RestTemplate restTemplate = new RestTemplate();

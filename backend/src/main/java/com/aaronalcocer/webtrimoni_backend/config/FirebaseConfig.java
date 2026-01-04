@@ -6,7 +6,6 @@ import com.google.firebase.FirebaseOptions;
 import jakarta.annotation.PostConstruct;
 import org.springframework.context.annotation.Configuration;
 
-import java.io.FileInputStream;
 import java.io.InputStream;
 
 @Configuration
@@ -16,7 +15,13 @@ public class FirebaseConfig {
     public void initFirebase() {
         try {
             InputStream serviceAccount =
-                new FileInputStream("src/main/resources/firebase-service-account.json");
+                getClass()
+                    .getClassLoader()
+                    .getResourceAsStream("firebase-service-account.json");
+
+            if (serviceAccount == null) {
+                throw new RuntimeException("No se encuentra firebase-service-account.json");
+            }
 
             FirebaseOptions options = FirebaseOptions.builder()
                 .setCredentials(GoogleCredentials.fromStream(serviceAccount))

@@ -22,6 +22,11 @@
           <button class="icon-btn">👁</button>
           <button class="edit-btn">✎</button>
         </div>
+
+        <!-- Botón para cerrar sesión -->
+        <div class="info-row">
+          <button class="logout-btn" @click="logout">Cerrar sesión</button>
+        </div>
       </div>
     </div>
 
@@ -42,6 +47,9 @@
 </template>
 
 <script>
+import { auth } from "@/firebase";
+import { currentUser } from "@/store/userStore";
+
 export default {
   name: "ZonaPersonal",
   data() {
@@ -56,107 +64,35 @@ export default {
         "Castell de Cardona"
       ]
     };
+  },
+  methods: {
+    async logout() {
+      try {
+        await auth.signOut();          // Cierra sesión en Firebase
+        currentUser.value = null;      // Limpia estado global
+        this.$router.push("/");        // Redirige a inicio
+      } catch (err) {
+        console.error("Error al cerrar sesión:", err);
+      }
+    }
   }
 };
 </script>
 
 <style scoped>
-.perfil-wrapper {
-  padding: 24px;
-  background: #ffe3e3;
-  min-height: 100vh;
-}
+/* ...todo tu CSS anterior... */
 
-/* PERFIL */
-.perfil-card {
-  display: flex;
-  gap: 24px;
-  background: #ff8f8f;
-  border-radius: 14px;
-  padding: 24px;
-  margin-bottom: 30px;
-}
-
-.avatar {
-  width: 160px;
-  height: 160px;
-  background: #e0e0e0;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.avatar-icon {
-  font-size: 64px;
-  color: #c44;
-}
-
-.perfil-info {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.info-row {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  font-size: 18px;
-}
-
-.password {
-  letter-spacing: 3px;
-}
-
-.edit-btn,
-.icon-btn {
-  background: #ff5c5c;
+.logout-btn {
+  background: #e04545;
   border: none;
   color: white;
   border-radius: 6px;
-  padding: 4px 8px;
+  padding: 6px 12px;
   cursor: pointer;
-}
-
-.edit-btn:hover,
-.icon-btn:hover {
-  background: #e04545;
-}
-
-/* FAVORITS */
-.section-title {
-  color: #e04545;
   font-weight: bold;
-  margin-bottom: 16px;
 }
 
-.favorits {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 20px;
-}
-
-.favorit-card {
-  background: #ff9f9f;
-  border-radius: 12px;
-  padding: 16px;
-  text-align: center;
-}
-
-.favorit-img {
-  background: #fff;
-  height: 120px;
-  border-radius: 8px;
-  margin-bottom: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #999;
-}
-
-.favorit-title {
-  font-weight: bold;
+.logout-btn:hover {
+  background: #c83b3b;
 }
 </style>

@@ -3,19 +3,13 @@
     <div class="auth-card">
       <h2>Iniciar sessió</h2>
 
-      <input
-        type="email"
-        v-model="email"
-        placeholder="Correu electrònic"
-      />
+      <input type="email" v-model="email" placeholder="Correu electrònic" />
 
-      <input
-        type="password"
-        v-model="password"
-        placeholder="Contrasenya"
-      />
+      <input type="password" v-model="password" placeholder="Contrasenya" />
 
       <button @click="login">Entrar</button>
+
+      <p v-if="error" class="error">{{ error }}</p>
 
       <p class="link">
         No tens compte?
@@ -26,18 +20,42 @@
 </template>
 
 <script>
+import { currentUser } from "@/store/userStore"; // tu store global
+import { auth } from "@/firebase";
+import { signInWithEmailAndPassword } from "firebase/auth";
+
 export default {
-  name: "Login",
   data() {
     return {
       email: "",
       password: "",
+      error: null
     };
   },
   methods: {
-    login() {
-      console.log("LOGIN:", this.email, this.password);
-      // aquí anirà Firebase / backend
+    async login() {
+      this.error = null;
+
+      try {
+        // 1️⃣ Login con Firebase
+        const userCredential = await signInWithEmailAndPassword(
+          auth,
+          this.email,
+          this.password
+        );
+
+        const user = userCredential.user;
+
+        // 2️⃣ Guardar usuario en estado global
+        currentUser.value = user;
+
+        // 3️⃣ Redirigir al inicio
+        this.$router.push("/");
+
+      } catch (err) {
+        this.error = "Correu o contrasenya incorrectes";
+        console.error(err);
+      }
     }
   }
 };
@@ -97,5 +115,11 @@ export default {
 .link a {
   color: white;
   font-weight: bold;
+}
+
+.error {
+  margin-top: 10px;
+  color: white;
+  font-size: 14px;
 }
 </style>

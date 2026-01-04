@@ -21,7 +21,7 @@
             <input type="text" placeholder="Cerca..." v-model="search" @keyup.enter="cerca" />
           </div>
 
-          <div class="user-icon" @click="$router.push('/login')">👤</div>
+          <div class="user-icon" @click="anarPerfil">👤</div>
         </div>
       </div>
     </header>
@@ -32,6 +32,7 @@
 </template>
 
 <script>
+import { currentUser } from "@/store/userStore";
 export default {
   name: "App",
   data() {
@@ -47,6 +48,14 @@ export default {
         query: { q: this.search },
       });
     },
+    anarPerfil(){
+      //Si tenim a userStore.js el value
+      if(currentUser.value){
+        this.$router.push("/zona-personal")
+      }else{
+        this.$router.push("/login")
+      }
+    }
   },
 };
 </script>
