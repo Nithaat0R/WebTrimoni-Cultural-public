@@ -48,6 +48,7 @@ export default {
 
         // 2️⃣ Guardar usuario en estado global
         currentUser.value = user;
+        console.log(user)
 
         // 3️⃣ Redirigir al inicio
         this.$router.push("/");
