@@ -4,14 +4,23 @@
 
     <h2 class="title">Patrimonis destacats</h2>
 
-    <div class="carousel">
+    <div class="carousel" v-if="patrimonis.length">
       <button class="nav left" @click="prev">‹</button>
 
       <div class="viewport">
         <div class="track" :style="{ transform: `translateX(-${offset}px)` }">
-          <div class="card" v-for="el in patrimonis" :key="el.id" @click="go(el.id)">
+          <div
+            class="card"
+            v-for="el in patrimonis"
+            :key="el.codi_element"
+            @click="go(el.codi_element)"
+          >
             <div class="img">
-              <img v-if="getImatge(el)" :src="getImatge(el)" alt="Imatge patrimoni" />
+              <img
+                v-if="getImatge(el)"
+                :src="getImatge(el)"
+                alt="Imatge patrimoni"
+              />
               <div v-else class="placeholder">Sense imatge</div>
             </div>
 
@@ -24,8 +33,14 @@
       <button class="nav right" @click="next">›</button>
     </div>
 
-    <div class="dots">
-      <span v-for="i in dotsCount" :key="i" :class="{ active: i - 1 === currentIndex }" />
+    <p v-else class="loading">Carregant patrimonis…</p>
+
+    <div class="dots" v-if="dotsCount > 1">
+      <span
+        v-for="i in dotsCount"
+        :key="i"
+        :class="{ active: i - 1 === currentIndex }"
+      />
     </div>
   </div>
 </template>
@@ -47,10 +62,7 @@ export default {
   },
   computed: {
     maxIndex() {
-      return Math.max(
-        0,
-        this.patrimonis.length - this.visibleCards
-      );
+      return Math.max(0, this.patrimonis.length - this.visibleCards);
     },
     dotsCount() {
       return this.maxIndex + 1;
@@ -72,10 +84,16 @@ export default {
           "http://localhost:8080/api/search",
           { params: { search: "catalunya" } }
         );
-        this.patrimonis = (res.data.elements ?? res.data).slice(0, 10);
+
+        const data = Array.isArray(res.data)
+          ? res.data
+          : res.data.elements;
+
+        this.patrimonis = (data ?? []).slice(0, 10);
+
         this.startAutoplay();
       } catch (e) {
-        console.error(e);
+        console.error("Error carregant patrimonis", e);
       }
     },
     startAutoplay() {
@@ -92,13 +110,13 @@ export default {
       this.currentIndex =
         this.currentIndex <= 0 ? this.maxIndex : this.currentIndex - 1;
     },
-    go(id) {
-      this.$router.push({ name: "patrimoni", query: { id } });
+    go(codi) {
+      this.$router.push({ name: "patrimoni", query: { id: codi } });
     },
     getImatge(el) {
-      if (!el.images || el.images.length === 0) return null;
+      if (!el.images || !el.images.length) return null;
       return el.images[0].split("|")[0];
-    } 
+    }
   },
 };
 </script>
@@ -189,5 +207,12 @@ export default {
 
 .dots span.active {
   background: #b22222;
+}
+
+.loading {
+  margin-top: 20px;
+  font-size: 16px;
+  color: #555;
+  text-align: center;
 }
 </style>

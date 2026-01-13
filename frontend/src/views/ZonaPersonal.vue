@@ -68,9 +68,9 @@ export default {
   methods: {
     async logout() {
       try {
-        await auth.signOut();          // Cierra sesión en Firebase
-        currentUser.value = null;      // Limpia estado global
-        this.$router.push("/");        // Redirige a inicio
+        await auth.signOut();      
+        currentUser.value = null;  
+        this.$router.push("/");    
       } catch (err) {
         console.error("Error al cerrar sesión:", err);
       }
@@ -80,7 +80,6 @@ export default {
 </script>
 
 <style scoped>
-/* ...todo tu CSS anterior... */
 
 .logout-btn {
   background: #e04545;

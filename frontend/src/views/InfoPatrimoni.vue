@@ -50,6 +50,47 @@
   </div>
 
   <p v-else class="loading">Carregant informació…</p>
+
+  <div class="comments">
+
+    <div class="comment-form">
+      <h3>Afegir comentari</h3>
+
+      <div class="stars">
+        <span v-for="n in 5" :key="n" class="star" :class="{ active: newRating >= n }" @click="newRating = n">
+          ★
+        </span>
+      </div>
+
+      <textarea v-model="newComment" placeholder="Escriu el teu comentari..."></textarea>
+
+      <button @click="submitComment">
+        Publicar comentari
+      </button>
+    </div>
+
+    <div class="comment-list">
+      <h3>Comentaris</h3>
+
+      <div v-if="comments.length === 0" class="no-comments">
+        Encara no hi ha comentaris
+      </div>
+
+      <div v-for="c in comments" :key="c.id" class="comment">
+        <div class="comment-header">
+          <div class="stars small">
+            <span v-for="n in 5" :key="n" :class="{ active: c.rating >= n }">
+              ★
+            </span>
+          </div>
+          <span class="date">{{ formatDate(c.date) }}</span>
+        </div>
+
+        <p class="comment-text">{{ c.text }}</p>
+      </div>
+    </div>
+
+  </div>
 </template>
 
 <script>
@@ -58,11 +99,13 @@ import { currentUser } from "@/store/userStore";
 
 export default {
   name: "InfoPatrimoni",
-
   data() {
     return {
       element: null,
       isFavorite: false,
+      comments: [],
+      newRating: 0,
+      newComment: "",
     };
   },
   methods: {
@@ -71,12 +114,11 @@ export default {
         alert("Inicia sessió per afegir a preferits");
         return;
       }
-
       let url;
 
-      if(this.isFavorite){
+      if (this.isFavorite) {
         url = "http://localhost:8080/api/favorite/remove";
-      } else{
+      } else {
         url = "http://localhost:8080/api/favorite/add";
       }
 
@@ -110,6 +152,68 @@ export default {
         console.error("Error obtenint l'estat de preferit", e);
       }
     },
+    async loadComments() {
+      // 🔜 aquí luego irá el backend
+      // simulación provisional
+      this.comments = [
+        {
+          id: 1,
+          rating: 4,
+          text: "Molt interessant, ben conservat.",
+          date: "2024-12-10"
+        },
+        {
+          id: 2,
+          rating: 5,
+          text: "Una visita obligatòria!",
+          date: "2025-01-03"
+        }
+      ];
+    },
+    async submitComment() {
+      if (this.newRating === 0) {
+        alert("Selecciona una puntuació");
+        return;
+      } else if (!this.estaLogejat) {
+        alert("Inicia sessió per poder afegir comentaris");
+        return;
+      }
+
+      const comment = {
+        idPatrimoni: this.element.id,
+        rating: this.newRating,
+        comment: this.newComment,
+        date: new Date().toISOString()
+      };
+
+      try {
+        console.log("S'envia el comentari")
+        const respuesta = await axios.post("http://localhost:8080/api/comments/submit",
+          comment,
+          {
+            headers: {
+              Authorization: `Bearer ${currentUser.value.accessToken}`
+            }
+          }
+        );
+      } catch (e) {
+        console.error("Error pujant el comentari", e);
+      }
+      this.newRating = 0;
+      this.newComment = "";
+    },
+
+    formatDate(date) {
+      const d = new Date(date);
+
+      return d.toLocaleDateString("ca-ES", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit"
+      });
+    }
 
   },
   async mounted() {
@@ -130,6 +234,7 @@ export default {
       this.element = res.data;
 
       await this.checkFavoriteStatus();
+      this.loadComments();
 
     } catch (e) {
       console.error("Error carregant patrimoni", e);
@@ -176,8 +281,6 @@ export default {
   flex-shrink: 0;
 }
 
-
-/* LA IMAGEN */
 .info-img {
   width: 100%;
   height: 100%;
@@ -193,7 +296,6 @@ export default {
   gap: 8px;
 }
 
-/* CONTENEDOR DE LA IMAGEN */
 .info-image {
   width: 300px;
   height: 250px;
@@ -205,7 +307,6 @@ export default {
   justify-content: center;
 }
 
-/* IMAGEN */
 .info-img {
   width: 100%;
   height: 100%;
@@ -213,7 +314,6 @@ export default {
   display: block;
 }
 
-/* BOTÓN FAVORITOS */
 .fav-btn {
   width: 100%;
   padding: 8px;
@@ -229,13 +329,10 @@ export default {
   background: #c83b3b;
 }
 
-
-/* Placeholder si no hay imagen */
 .placeholder {
   color: #999;
   font-size: 14px;
 }
-
 
 .data {
   display: flex;
@@ -267,5 +364,89 @@ export default {
 .loading {
   padding: 30px;
   font-size: 18px;
+}
+
+.comments {
+  margin-top: 30px;
+  background: #ffd6d6;
+  padding: 20px;
+  border-radius: 12px;
+}
+
+.comment-form {
+  margin-bottom: 30px;
+}
+
+.comment-form textarea {
+  width: 100%;
+  min-height: 80px;
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  resize: vertical;
+}
+
+.comment-form button {
+  margin-top: 10px;
+  padding: 10px 16px;
+  background: #e04545;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.comment-form button:hover {
+  background: #c83b3b;
+}
+
+/* ESTRELLAS */
+.stars {
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.stars.small {
+  font-size: 16px;
+}
+
+.star,
+.stars span {
+  color: #ccc;
+}
+
+.star.active,
+.stars span.active {
+  color: #ffcc00;
+}
+
+/* COMENTARIOS */
+.comment {
+  background: #fff;
+  padding: 12px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+.comment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.comment-text {
+  margin-top: 6px;
+  font-size: 14px;
+}
+
+.date {
+  font-size: 12px;
+  color: #777;
+}
+
+.no-comments {
+  font-style: italic;
+  color: #666;
 }
 </style>
