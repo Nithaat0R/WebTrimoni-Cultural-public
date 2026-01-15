@@ -43,12 +43,6 @@ public class AuthController {
       Firestore db = FirestoreClient.getFirestore();
 
       List<Map<String, Object>> comentaris = new ArrayList<>();
-      Map<String, Object> comentari = new HashMap<>();
-      comentari.put("id_patrimoni", null);
-      comentari.put("comentari", "");
-      comentari.put("puntuacio", null);
-
-      comentaris.add(comentari);
 
       Map<String, Object> userData = new HashMap<>();
       userData.put("id", user.getUid());

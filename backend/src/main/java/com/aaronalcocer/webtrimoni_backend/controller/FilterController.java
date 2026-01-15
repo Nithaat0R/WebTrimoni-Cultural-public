@@ -22,24 +22,26 @@ public class FilterController {
     @GetMapping("/api/filtre")
     public ArrayNode getFilter(@RequestParam String filtre, @RequestParam String data) {
 
-        String url = "";
-
-        switch (filtre) {
-            case ("comarca"):
-                url = "https://do.diba.cat/api/dataset/patrimoni_cultural/ord-titol/asc/camp-rel_comarca/" + data;
-            case ("segle"):
-                url = "https://do.diba.cat/api/dataset/patrimoni_cultural/ord-titol/asc/camp-centuria-like/" + data;
-            case("estil"):
-                url = "https://do.diba.cat/api/dataset/patrimoni_cultural/ord-titol/asc/camp-estil-like/" + data;
-        }
-
-        
         try {
+            String url = "";
+
+            switch (filtre) {
+                case ("comarca"):
+                    url = "https://do.diba.cat/api/dataset/patrimoni_cultural/ord-titol/asc/camp-rel_comarca/" + data;
+                    break;
+                case ("segle"):
+                    url = "https://do.diba.cat/api/dataset/patrimoni_cultural/ord-titol/asc/camp-centuria-like/" + data;
+                    break;
+                case ("estil"):
+                    url = "https://do.diba.cat/api/dataset/patrimoni_cultural/ord-titol/asc/camp-estil-like/" + data;
+                    break;
+            }
             String jsonString = restTemplate.getForObject(url, String.class);
-            //Generem un arbre de nodes a partir del JSON per poder manipular facilment
+            // Generem un arbre de nodes a partir del JSON per poder manipular facilment
             JsonNode root = objectMapper.readTree(jsonString);
-            //Accedim a elements ja que la resta del JSON és informació de l'API
+            // Accedim a elements ja que la resta del JSON és informació de l'API
             ArrayNode elements = (ArrayNode) root.path("elements");
+
             return elements;
         } catch (Exception e) {
             e.printStackTrace();
