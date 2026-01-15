@@ -1,26 +1,25 @@
 <template>
   <div class="auth-wrapper">
-    <div class="auth-card">
-      <h2>Iniciar sessió</h2>
+    <div class="auth-container">
+      <img src="@/assets/LOGO PATRIMONI.png" alt="Logo de la web" class="auth-logo" />
 
-      <input type="email" v-model="email" placeholder="Correu electrònic" />
-
-      <input type="password" v-model="password" placeholder="Contrasenya" />
-
-      <button @click="login">Entrar</button>
-
-      <p v-if="error" class="error">{{ error }}</p>
-
-      <p class="link">
-        No tens compte?
-        <router-link to="/register">Registra't</router-link>
-      </p>
+      <div class="auth-card">
+        <h2>Iniciar sessió</h2>
+        <input type="email" v-model="email" placeholder="Correu electrònic" />
+        <input type="password" v-model="password" placeholder="Contrasenya" />
+        <button @click="login">Entrar</button>
+        <p v-if="error" class="error">{{ error }}</p>
+        <p class="link">
+          No tens compte?
+          <router-link to="/register">Registra't</router-link>
+        </p>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import { currentUser } from "@/store/userStore"; // tu store global
+import { currentUser } from "@/store/userStore";
 import { auth } from "@/firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
 
@@ -37,7 +36,7 @@ export default {
       this.error = null;
 
       try {
-        // 1️⃣ Login con Firebase
+        // Login con Firebase
         const userCredential = await signInWithEmailAndPassword(
           auth,
           this.email,
@@ -46,11 +45,10 @@ export default {
 
         const user = userCredential.user;
 
-        // 2️⃣ Guardar usuario en estado global
+        // Guardar usuario en estado global
         currentUser.value = user;
         console.log(user)
 
-        // 3️⃣ Redirigir al inicio
         this.$router.push("/");
 
       } catch (err) {
@@ -67,8 +65,21 @@ export default {
   min-height: 100vh;
   background: #ffe3e3;
   display: flex;
-  align-items: center;
+  margin: 4%;
+  align-items: top;
   justify-content: center;
+}
+
+.auth-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.auth-logo {
+  max-width: 120px;
+  height: auto;
 }
 
 .auth-card {
@@ -77,11 +88,12 @@ export default {
   border-radius: 16px;
   width: 320px;
   text-align: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 .auth-card h2 {
   margin-bottom: 20px;
-  color: white;
+  color: #d42828;
 }
 
 .auth-card input {
@@ -91,6 +103,7 @@ export default {
   border-radius: 8px;
   border: none;
   font-size: 14px;
+  box-sizing: border-box;
 }
 
 .auth-card button {
@@ -114,7 +127,7 @@ export default {
 }
 
 .link a {
-  color: white;
+  color: #d42828;
   font-weight: bold;
 }
 

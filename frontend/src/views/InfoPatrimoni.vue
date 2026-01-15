@@ -79,14 +79,16 @@
       <div v-for="c in comments" :key="c.id" class="comment">
         <div class="comment-header">
           <div class="stars small">
-            <span v-for="n in 5" :key="n" :class="{ active: c.rating >= n }">
+            <span v-for="n in 5" :key="n" :class="{ active: c.puntuacio >= n }">
               ★
             </span>
           </div>
-          <span class="date">{{ formatDate(c.date) }}</span>
+          <span class="date">{{ formatDate(c.data) }}</span>
         </div>
 
-        <p class="comment-text">{{ c.text }}</p>
+        <strong style="font-size: 13px; color: #e04545;">{{ c.nomUsuari }}</strong>
+
+        <p class="comment-text">{{ c.comentari }}</p>
       </div>
     </div>
 
@@ -153,22 +155,19 @@ export default {
       }
     },
     async loadComments() {
-      // 🔜 aquí luego irá el backend
-      // simulación provisional
-      this.comments = [
-        {
-          id: 1,
-          rating: 4,
-          text: "Molt interessant, ben conservat.",
-          date: "2024-12-10"
-        },
-        {
-          id: 2,
-          rating: 5,
-          text: "Una visita obligatòria!",
-          date: "2025-01-03"
-        }
-      ];
+      const id = this.$route.query.id;
+
+      if (!id) return;
+
+      try {
+        const res = await axios.get(
+          "http://localhost:8080/api/comments/load",
+          { params: { id: id } }
+        );
+        this.comments = res.data;
+      } catch (e) {
+        console.error("Error carregant comentaris", e);
+      }
     },
     async submitComment() {
       if (this.newRating === 0) {
@@ -196,11 +195,15 @@ export default {
             }
           }
         );
+
+        this.newRating = 0;
+        this.newComment = "";
+        
+        this.loadComments();
       } catch (e) {
         console.error("Error pujant el comentari", e);
       }
-      this.newRating = 0;
-      this.newComment = "";
+
     },
 
     formatDate(date) {

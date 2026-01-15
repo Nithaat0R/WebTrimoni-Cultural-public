@@ -1,19 +1,17 @@
 <template>
   <div id="app">
     <header class="topbar">
-      <!-- Esquerra del HUD -->
       <div class="left">
         <div class="logo">
-          <img src="@/assets/LOGO PATRIMONI.png" alt="Info Patrimoni" class="logo-img" @click="$router.push('/')"/>
+          <img src="@/assets/LOGO PATRIMONI.png" alt="Info Patrimoni" class="logo-img" @click="$router.push('/')" />
         </div>
         <nav class="menu">
           <button @click="$router.push('/')">INICI</button>
           <button @click="$router.push('/comarques')">COMARCA</button>
           <button @click="$router.push('/segles')">SEGLE</button>
-          <button @click="$router.push('/estil')">ESTIL</button>
+          <button @click="$router.push('/estils')">ESTIL</button>
         </nav>
       </div>
-      <!-- Dreta del HUD -->
       <div class="right">
         <div class="actions">
           <div class="search">
@@ -21,7 +19,13 @@
             <input type="text" placeholder="Cerca..." v-model="search" @keyup.enter="cerca" />
           </div>
 
-          <div class="user-icon" @click="anarPerfil">👤</div>
+          <div class="user-icon" @click="anarPerfil">
+            <svg viewBox="0 0 24 24" class="user-svg">
+              <path
+                d="M12 12c2.7 0 5-2.3 5-5s-2.3-5-5-5-5 2.3-5 5 2.3 5 5 5zm0 2c-3.3 0-10 1.7-10 5v3h20v-3c0-3.3-6.7-5-10-5z" />
+            </svg>
+          </div>
+
         </div>
       </div>
     </header>
@@ -48,11 +52,10 @@ export default {
         query: { q: this.search },
       });
     },
-    anarPerfil(){
-      //Si tenim a userStore.js el value
-      if(currentUser.value){
+    anarPerfil() {
+      if (currentUser.value) {
         this.$router.push("/zona-personal")
-      }else{
+      } else {
         this.$router.push("/login")
       }
     }
@@ -84,7 +87,7 @@ body {
 .left {
   display: flex;
   align-items: center;
-  gap:20px;
+  gap: 20px;
 }
 
 .logo-img {
@@ -142,8 +145,21 @@ body {
 
 /* User */
 .user-icon {
-  font-size: 20px;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.user-svg {
+  width: 40px;
+  height: 40px;
+  fill: #d42828;
+  transition: transform 0.2s ease, fill 0.2s ease;
+}
+
+.user-icon:hover .user-svg {
+  transform: scale(1.1);
+  fill: #a12020;
 }
 
 /* Content */

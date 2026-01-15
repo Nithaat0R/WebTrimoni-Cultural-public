@@ -30,7 +30,7 @@ public class FilterController {
             case ("segle"):
                 url = "https://do.diba.cat/api/dataset/patrimoni_cultural/ord-titol/asc/camp-centuria-like/" + data;
             case("estil"):
-                url = "https://do.diba.cat/api/dataset/patrimoni_cultural/ord-titol/asc/camp-rel_comarca/" + data;
+                url = "https://do.diba.cat/api/dataset/patrimoni_cultural/ord-titol/asc/camp-estil-like/" + data;
         }
 
         

@@ -1,33 +1,38 @@
 <template>
   <div class="auth-wrapper">
-    <div class="card">
-      <h2>Registre</h2>
+    <div class="auth-container">
+      <img src="@/assets/LOGO PATRIMONI.png" alt="Logo de la web" class="auth-logo" />
 
-      <input
-        v-model="username"
-        type=""
-        placeholder="Nom d'usuari"
-      />
+      <div class="auth-card">
+        <h2>Registre</h2>
 
-      <input
-        v-model="email"
-        type="email"
-        placeholder="Email"
-      />
+        <input
+          v-model="username"
+          type="text"
+          placeholder="Nom d'usuari"
+        />
 
-      <input
-        v-model="password"
-        type="password"
-        placeholder="Contrasenya"
-      />
+        <input
+          v-model="email"
+          type="email"
+          placeholder="Email"
+        />
 
-      <button @click="register">Crear compte</button>
+        <input
+          v-model="password"
+          type="password"
+          placeholder="Contrasenya"
+        />
 
-      <p v-if="error" class="error">{{ error }}</p>
+        <button @click="register">Crear compte</button>
 
-      <p class="link" @click="$router.push('/login')">
-        Ja tens compte? Inicia sessió
-      </p>
+        <p v-if="error" class="error">{{ error }}</p>
+
+        <p class="link">
+          Ja tens compte? 
+          <router-link to="/login">Inicia sessió</router-link>
+        </p>
+      </div>
     </div>
   </div>
 </template>
@@ -48,7 +53,6 @@ export default {
   methods: {
     async register() {
       this.error = "";
-
       try {
         await axios.post(
           "http://localhost:8080/api/auth/register",
@@ -59,9 +63,7 @@ export default {
           }
         );
 
-        // tras registro → login
         this.$router.push("/login");
-
       } catch (e) {
         this.error = "No s'ha pogut crear el compte";
       }
@@ -73,51 +75,78 @@ export default {
 <style scoped>
 .auth-wrapper {
   min-height: 100vh;
+  background: #ffe3e3;
   display: flex;
+  margin: 4%;
+  align-items: flex-start;
   justify-content: center;
+}
+
+.auth-container {
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  background: #ffe5e5;
+  gap: 20px;
 }
 
-.card {
-  background: #fff;
+.auth-logo {
+  max-width: 120px;
+  height: auto;
+}
+
+.auth-card {
+  background: #ff8f8f;
   padding: 30px;
+  border-radius: 16px;
   width: 320px;
-  border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0,0,0,.1);
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-input {
+.auth-card h2 {
+  margin-bottom: 20px;
+  color: #d42828;
+}
+
+.auth-card input {
   width: 100%;
   padding: 10px;
   margin-bottom: 12px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
+  border-radius: 8px;
+  border: none;
+  font-size: 14px;
+  box-sizing: border-box;
 }
 
-button {
+.auth-card button {
   width: 100%;
   padding: 10px;
-  background: #c62828;
-  color: #fff;
+  background: #e04545;
+  color: white;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
+  font-size: 16px;
 }
 
-button:hover {
-  background: #b71c1c;
-}
-
-.error {
-  color: red;
-  margin-top: 10px;
+.auth-card button:hover {
+  background: #c83b3b;
 }
 
 .link {
-  margin-top: 15px;
-  color: #c62828;
-  cursor: pointer;
-  text-align: center;
+  margin-top: 16px;
+  font-size: 14px;
+}
+
+.link a {
+  color: #d42828;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.error {
+  margin-top: 10px;
+  color: white;
+  font-size: 14px;
 }
 </style>

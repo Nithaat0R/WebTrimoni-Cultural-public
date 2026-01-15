@@ -4,6 +4,7 @@ import Resultats from "@/views/Resultats.vue";
 import InfoPatrimoni from "@/views/InfoPatrimoni.vue";
 import Comarques from "@/views/Comarques.vue";
 import Segles from "@/views/Segles.vue"
+import Estils from "@/views/Estils.vue"
 import Filtre from "@/views/Filtre.vue";
 import ZonaPersonal from "@/views/ZonaPersonal.vue"
 import Login from "@/views/Login.vue"
@@ -36,6 +37,12 @@ const routes = [
     path: "/segles",
     name: "segles",
     component: Segles,
+    props: true,
+  },
+  {
+    path: "/estils",
+    name: "estils",
+    component: Estils,
     props: true,
   },
   {
