@@ -8,7 +8,7 @@
       <button class="nav left" @click="prev">‹</button>
       <div class="viewport">
         <div class="track" :style="{ transform: `translateX(-${offset}px)` }">
-          <div class="card" v-for="el in patrimonis" :key="el.codi_element" @click="go(el.codi_element)">
+          <div class="card" v-for="el in patrimonis" :key="el.codi_element" @click="go(el.id)">
             <div class="img">
               <img v-if="getImatge(el)" :src="getImatge(el)" alt="Imatge patrimoni" />
               <div v-else class="placeholder">Sense imatge</div>

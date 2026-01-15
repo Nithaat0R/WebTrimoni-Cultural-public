@@ -36,7 +36,7 @@
 
         <div class="info-group">
           <p><strong>Ubicació:</strong> {{ element.ubicacio }}</p>
-          <p><strong>Coordenades:</strong> {{ element.latitud }}, {{ element.longitud }}</p>
+          <p><strong>Coordenades:</strong> {{ element.coordenades}}</p>
         </div>
 
         <div class="info-group">
