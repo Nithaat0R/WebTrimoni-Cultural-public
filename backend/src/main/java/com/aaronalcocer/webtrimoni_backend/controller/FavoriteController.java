@@ -1,11 +1,15 @@
 package com.aaronalcocer.webtrimoni_backend.controller;
 
 import java.util.Map;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 
 import com.aaronalcocer.webtrimoni_backend.dto.FavoriteRequest;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.cloud.firestore.DocumentSnapshot;
 import com.google.cloud.firestore.FieldValue;
 import com.google.cloud.firestore.Firestore;
@@ -14,6 +18,7 @@ import com.google.firebase.auth.FirebaseToken;
 import com.google.firebase.cloud.FirestoreClient;
 
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -26,6 +31,9 @@ import org.springframework.web.bind.annotation.RequestHeader;
 @RequestMapping("/api/favorite")
 @CrossOrigin
 public class FavoriteController {
+
+  private final RestTemplate restTemplate = new RestTemplate();
+  private final ObjectMapper objectMapper = new ObjectMapper();
 
   @PostMapping("/add")
   public ResponseEntity<?> addFavorit(
@@ -114,4 +122,41 @@ public class FavoriteController {
     }
   }
 
+  @GetMapping("/getfavorites")
+  public List<JsonNode> getUserFavorites(@RequestHeader("Authorization") String authHeader) {
+    List<JsonNode> favoriteDetails = new ArrayList<>();
+    try {
+      String token = authHeader.replace("Bearer ", "");
+      FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(token);
+      String uid = decodedToken.getUid();
+
+      Firestore db = FirestoreClient.getFirestore();
+      DocumentSnapshot userDoc = db.collection("users").document(uid).get().get();
+
+      if (userDoc.exists() && userDoc.contains("preferits")) {
+        List<?> rawList = (List<?>) userDoc.get("preferits");
+
+        for (Object item : rawList) {
+          String id = String.valueOf(item);
+          try {
+            String url = "https://do.diba.cat/api/dataset/patrimoni_cultural/camp-id/" + id;
+            String jsonResponse = restTemplate.getForObject(url, String.class);
+            JsonNode resp = objectMapper.readTree(jsonResponse);
+            JsonNode elements = resp.path("elements");
+
+            if (elements.isArray() && !elements.isEmpty()) {
+              ObjectNode node = (ObjectNode) elements.get(0);
+              node.put("id", id); // Aseguramos que el ID se llame 'id' para el front
+              favoriteDetails.add(node);
+            }
+          } catch (Exception e) {
+            System.err.println("No se pudo obtener información del favorito: " + id);
+          }
+        }
+      }
+    } catch (Exception e) {
+      System.err.println("Error en getFavorites: " + e.getMessage());
+    }
+    return favoriteDetails;
+  }
 }

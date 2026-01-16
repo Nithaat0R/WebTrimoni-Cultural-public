@@ -79,7 +79,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: #ff6f6f;
+  background-color: #ff6565;
   padding: 10px 20px;
   gap: 20px;
 }

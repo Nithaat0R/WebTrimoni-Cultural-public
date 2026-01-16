@@ -36,7 +36,7 @@
 
         <div class="info-group">
           <p><strong>Ubicació:</strong> {{ element.ubicacio }}</p>
-          <p><strong>Coordenades:</strong> {{ element.coordenades}}</p>
+          <p><strong>Coordenades:</strong> {{ element.coordenades }}</p>
         </div>
 
         <div class="info-group">
@@ -198,7 +198,7 @@ export default {
 
         this.newRating = 0;
         this.newComment = "";
-        
+
         this.loadComments();
       } catch (e) {
         console.error("Error pujant el comentari", e);
@@ -221,24 +221,21 @@ export default {
   },
   async mounted() {
     const id = this.$route.query.id;
-
-    if (!id) {
-      console.error("No hi ha id a la URL");
-      return;
-    }
+    if (!id) return;
 
     try {
-      const res = await axios.get(
-        "http://localhost:8080/api/infopatrimoni",
-        {
-          params: { id }
-        }
-      );
+      const res = await axios.get("http://localhost:8080/api/infopatrimoni", {
+        params: { id }
+      });
+
       this.element = res.data;
+
+      if (!this.element.id) {
+        this.element.id = id;
+      }
 
       await this.checkFavoriteStatus();
       this.loadComments();
-
     } catch (e) {
       console.error("Error carregant patrimoni", e);
     }

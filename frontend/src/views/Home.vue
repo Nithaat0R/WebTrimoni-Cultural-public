@@ -1,6 +1,11 @@
 <template>
   <div class="home">
-    <h1>WebTrimoni Cultural</h1>
+    <header class="home-header">
+      <div class="header-content">
+        <img src="@/assets/LOGO PATRIMONI.png" alt="WebTrimoni Logo" class="logo" />
+        <h1>WebTrimoni Cultural</h1>
+      </div>
+    </header>
 
     <h2 class="title">Patrimonis destacats</h2>
 
@@ -23,10 +28,11 @@
 
     <p v-else class="loading">Carregant patrimonis…</p>
 
-    <div v-if="recomanats.length" style="margin-top: 50px;">
+    <div style="margin-top: 50px;">
       <h2 class="title">Recomanat per a tu</h2>
-      <div class="recomanats-grid">
-        <div class="card" v-for="el in recomanats" :key="el.codi_element" @click="go(el.codi_element)">
+
+      <div v-if="recomanats.length" class="recomanats-grid">
+        <div class="card" v-for="el in recomanats" :key="el.id" @click="go(el.id)">
           <div class="img">
             <img v-if="getImatge(el)" :src="getImatge(el)" alt="Imatge" />
             <div v-else class="placeholder">Sense imatge</div>
@@ -34,6 +40,32 @@
           <h3>{{ el.titol }}</h3>
           <p>{{ el.municipi_nom }}</p>
         </div>
+      </div>
+
+      <div v-else-if="isLoggedIn" class="no-recomanats">
+        <p>Encara no tenim recomanacions per a tu. Puntua alguns patrimonis perquè puguem conèixer els teus gustos!</p>
+      </div>
+
+      <div v-else class="no-recomanats">
+        <p>Inicia sessió per veure recomanacions personalitzades.</p>
+      </div>
+    </div>
+    <div v-if="isLoggedIn" style="margin-top: 50px;">
+      <h2 class="title">Els teus preferits ⭐</h2>
+
+      <div v-if="favorits.length" class="recomanats-grid">
+        <div class="card" v-for="el in favorits" :key="el.id" @click="go(el.id)">
+          <div class="img">
+            <img v-if="getImatge(el)" :src="getImatge(el)" alt="Imatge" />
+            <div v-else class="placeholder">Sense imatge</div>
+          </div>
+          <h3>{{ el.titol }}</h3>
+          <p>{{ el.municipi_nom }}</p>
+        </div>
+      </div>
+
+      <div v-else class="no-recomanats">
+        <p>Encara no tens cap patrimoni preferit. Explora i marca'ls amb una estrella!</p>
       </div>
     </div>
   </div>
@@ -50,6 +82,7 @@ export default {
     return {
       patrimonis: [],
       recomanats: [],
+      favorits: [],
       currentIndex: 0,
       visibleCards: 4,
       cardWidth: 240,
@@ -58,6 +91,9 @@ export default {
     };
   },
   computed: {
+    isLoggedIn() {
+      return !!currentUser.value;
+    },
     maxIndex() {
       return Math.max(0, this.patrimonis.length - this.visibleCards);
     },
@@ -74,6 +110,7 @@ export default {
       () => currentUser.value,
       (user) => {
         this.loadRecommendations(user);
+        this.loadFavorites(user);
       },
       { immediate: true }
     );
@@ -84,17 +121,17 @@ export default {
   methods: {
     async load() {
       try {
-        const res = await axios.get("http://localhost:8080/api/search", {
-          params: { search: "catalunya" }
-        });
-        const data = Array.isArray(res.data) ? res.data : res.data.elements;
-        this.patrimonis = (data ?? []).slice(0, 10);
-        this.startAutoplay();
+        const res = await axios.get("http://localhost:8080/api/featured");
+
+        this.patrimonis = res.data;
+
+        if (this.patrimonis.length > 0) {
+          this.startAutoplay();
+        }
       } catch (e) {
-        console.error("Error carregant patrimonis", e);
+        console.error("Error carregant patrimonis destacats", e);
       }
     },
-
     async loadRecommendations(user) {
       try {
         const config = {};
@@ -109,7 +146,21 @@ export default {
         console.error("Error recomanacions:", e);
       }
     },
-
+    async loadFavorites(user) {
+      if (!user) {
+        this.favorits = [];
+        return;
+      }
+      try {
+        const config = {
+          headers: { Authorization: `Bearer ${user.accessToken}` }
+        };
+        const res = await axios.get("http://localhost:8080/api/favorite/getfavorites", config);
+        this.favorits = res.data;
+      } catch (e) {
+        console.error("Error carregant preferits:", e);
+      }
+    },
     startAutoplay() {
       if (this.patrimonis.length <= this.visibleCards) return;
       this.interval = setInterval(this.next, 4000);
@@ -134,6 +185,36 @@ export default {
 </script>
 
 <style scoped>
+.home-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 0;
+  background-color: #fcfcfc;
+  margin-bottom: 20px;
+  border-bottom: 1px solid #eee;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  gap: 20px; 
+}
+
+.logo {
+  width: 100px;
+  height: auto;
+  filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.1));
+}
+
+h1 {
+  font-size: 2.5rem;
+  color: #9e2828;
+  margin: 0;
+  font-weight: 700;
+  letter-spacing: -1px;
+}
+
 .home {
   padding: 30px;
 }
@@ -214,5 +295,14 @@ export default {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
   gap: 16px;
+}
+
+.no-recomanats {
+  padding: 20px;
+  background: #f9f9f9;
+  border-radius: 12px;
+  text-align: center;
+  color: #666;
+  border: 1px dashed #ccc;
 }
 </style>
