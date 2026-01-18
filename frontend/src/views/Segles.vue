@@ -1,1 +1,1 @@
-<!-- EN PROCÉS DE CANVI -->
+<template>Hola</template>

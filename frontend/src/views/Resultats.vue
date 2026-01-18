@@ -9,35 +9,25 @@
     </div>
 
     <div class="cards" v-else>
-      <div
-        class="card"
+      <PatrimoniCard
         v-for="el in resultats"
         :key="el.id"
-        @click="go(el.id)"
-      >
-        <div class="image">
-          <img
-            v-if="getImatge(el)"
-            :src="getImatge(el)"
-            alt="Imatge patrimoni"
-          />
-          <div v-else class="placeholder">Sense imatge</div>
-        </div>
-
-        <div class="info">
-          <h3>{{ el.titol }}</h3>
-          <p>📍{{ el.municipi_nom }}</p>
-        </div>
-      </div>
+        :patrimoni="el"
+        @click="go"
+      />
     </div>
   </div>
 </template>
 
 <script>
 import axios from "axios";
+import PatrimoniCard from "@/components/PatrimoniCard.vue";
 
 export default {
   name: "Resultats",
+  components: {
+    PatrimoniCard
+  },
   data() {
     return {
       query: "",
@@ -71,17 +61,12 @@ export default {
         name: "patrimoni",
         query: { id },
       });
-    },
-
-    getImatge(el) {
-      if (!el.images || el.images.length === 0) return null;
-      return el.images[0].split("|")[0];
-    },
+    }
   },
 };
 </script>
 
-<style>
+<style scoped>
 .resultats {
   padding: 20px;
 }
@@ -96,59 +81,6 @@ export default {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 20px;
-}
-
-/* CARD */
-.card {
-  background: rgb(255, 243, 243);
-  border-radius: 14px;
-  overflow: hidden;
-  cursor: pointer;
-  border: 2px solid rgba(255, 111, 111, 0.35);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 10px 25px rgba(255, 111, 111, 0.35);
-}
-
-/* IMAGEN */
-.image {
-  height: 160px;
-  background: #ffd6d6;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.placeholder {
-  color: #ff6f6f;
-  font-weight: 600;
-}
-
-/* INFO */
-.info {
-  padding: 14px;
-  color: #2c2c2c;
-}
-
-.info h3 {
-  margin: 0 0 8px;
-  color: #000000;
-  font-size: 1.1rem;
-}
-
-.info p {
-  margin: 4px 0;
-  color: #555;
-  font-size: 0.9rem;
 }
 
 /* ESTADOS */

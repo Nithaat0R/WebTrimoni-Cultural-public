@@ -50,7 +50,6 @@ public class AuthController {
             List<Map<String, Object>> comentaris = new ArrayList<>();
 
             Map<String, Object> userData = new HashMap<>();
-            userData.put("id", user.getUid());
             userData.put("nom_usuari", request.getUsername());
             userData.put("preferits", new ArrayList<>());
             userData.put("comentaris", comentaris);
@@ -70,18 +69,6 @@ public class AuthController {
                     .badRequest()
                     .body(Map.of("error", e.getMessage()));
         }
-    }
-
-    @GetMapping("/verify")
-    public ResponseEntity<?> verify(HttpServletRequest request) {
-
-        Object uid = request.getAttribute("uid");
-
-        if (uid == null) {
-            return ResponseEntity.status(401).body("Token no procesado");
-        }
-
-        return ResponseEntity.ok("OK");
     }
 
     @GetMapping("/profile")

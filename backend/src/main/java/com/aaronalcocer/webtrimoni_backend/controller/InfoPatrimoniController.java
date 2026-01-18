@@ -60,7 +60,6 @@ public class InfoPatrimoniController {
         }
     }
 
-    // Helper: campo vacío → "Desconegut"
     private String getOrUnknown(JsonNode node, String field) {
         JsonNode value = node.get(field);
         if (value == null || value.isNull() || value.asText().trim().isEmpty()) {

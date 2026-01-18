@@ -9,35 +9,25 @@
     </div>
 
     <div class="cards" v-else>
-      <div
-        class="card"
+      <PatrimoniCard
         v-for="el in resultats"
         :key="el.id"
-        @click="go(el.id)"
-      >
-        <div class="image">
-          <img
-            v-if="getImatge(el)"
-            :src="getImatge(el)"
-            alt="Imatge patrimoni"
-          />
-          <div v-else class="placeholder">Sense imatge</div>
-        </div>
-
-        <div class="info">
-          <h3>{{ el.titol }}</h3>
-          <p>📍{{ el.municipi_nom }}</p>
-        </div>
-      </div>
+        :patrimoni="el"
+        @click="go"
+      />
     </div>
   </div>
 </template>
 
 <script>
 import axios from "axios";
+import PatrimoniCard from "@/components/PatrimoniCard.vue";
 
 export default {
   name: "Resultats",
+  components: {
+    PatrimoniCard
+  },
   data() {
     return {
       query: "",
@@ -76,11 +66,7 @@ export default {
         name: "patrimoni",
         query: { id }
       });
-    },
-    getImatge(el) {
-      if (!el.images || el.images.length === 0) return null;
-      return el.images[0].split("|")[0];
-    }    
+    }
   },
 };
 </script>
@@ -174,5 +160,20 @@ body {
 /* Content */
 .content {
   padding: 20px;
+}
+
+/* GRID */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+/* ESTADOS */
+.loading,
+.empty {
+  margin-top: 20px;
+  color: #000000;
+  font-style: italic;
 }
 </style>

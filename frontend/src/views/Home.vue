@@ -13,14 +13,13 @@
       <button class="nav left" @click="prev">‹</button>
       <div class="viewport">
         <div class="track" :style="{ transform: `translateX(-${offset}px)` }">
-          <div class="card" v-for="el in patrimonis" :key="el.codi_element" @click="go(el.id)">
-            <div class="img">
-              <img v-if="getImatge(el)" :src="getImatge(el)" alt="Imatge patrimoni" />
-              <div v-else class="placeholder">Sense imatge</div>
-            </div>
-            <h3>{{ el.titol }}</h3>
-            <p>{{ el.municipi_nom }}</p>
-          </div>
+          <PatrimoniCard 
+            v-for="el in patrimonis" 
+            :key="el.id" 
+            :patrimoni="el" 
+            class="carousel-card-fix"
+            @click="go"
+          />
         </div>
       </div>
       <button class="nav right" @click="next">›</button>
@@ -32,14 +31,12 @@
       <h2 class="title">Recomanat per a tu</h2>
 
       <div v-if="recomanats.length" class="recomanats-grid">
-        <div class="card" v-for="el in recomanats" :key="el.id" @click="go(el.id)">
-          <div class="img">
-            <img v-if="getImatge(el)" :src="getImatge(el)" alt="Imatge" />
-            <div v-else class="placeholder">Sense imatge</div>
-          </div>
-          <h3>{{ el.titol }}</h3>
-          <p>{{ el.municipi_nom }}</p>
-        </div>
+        <PatrimoniCard 
+          v-for="el in recomanats" 
+          :key="el.id" 
+          :patrimoni="el" 
+          @click="go"
+        />
       </div>
 
       <div v-else-if="isLoggedIn" class="no-recomanats">
@@ -50,18 +47,17 @@
         <p>Inicia sessió per veure recomanacions personalitzades.</p>
       </div>
     </div>
+
     <div v-if="isLoggedIn" style="margin-top: 50px;">
       <h2 class="title">Els teus preferits ⭐</h2>
 
       <div v-if="favorits.length" class="recomanats-grid">
-        <div class="card" v-for="el in favorits" :key="el.id" @click="go(el.id)">
-          <div class="img">
-            <img v-if="getImatge(el)" :src="getImatge(el)" alt="Imatge" />
-            <div v-else class="placeholder">Sense imatge</div>
-          </div>
-          <h3>{{ el.titol }}</h3>
-          <p>{{ el.municipi_nom }}</p>
-        </div>
+        <PatrimoniCard 
+          v-for="el in favorits" 
+          :key="el.id" 
+          :patrimoni="el" 
+          @click="go"
+        />
       </div>
 
       <div v-else class="no-recomanats">
@@ -75,9 +71,13 @@
 import axios from "axios";
 import { currentUser } from "@/store/userStore";
 import { watch } from "vue";
+import PatrimoniCard from "@/components/PatrimoniCard.vue";
 
 export default {
   name: "Home",
+  components: {
+    PatrimoniCard
+  },
   data() {
     return {
       patrimonis: [],
@@ -122,9 +122,7 @@ export default {
     async load() {
       try {
         const res = await axios.get("http://localhost:8080/api/featured");
-
         this.patrimonis = res.data;
-
         if (this.patrimonis.length > 0) {
           this.startAutoplay();
         }
@@ -138,10 +136,8 @@ export default {
         if (user?.accessToken) {
           config.headers = { Authorization: `Bearer ${user.accessToken}` };
         }
-
         const res = await axios.get("http://localhost:8080/api/recommendations", config);
         this.recomanats = res.data;
-        console.log("🎯 RECOMANACIONS:", this.recomanats);
       } catch (e) {
         console.error("Error recomanacions:", e);
       }
@@ -173,12 +169,8 @@ export default {
       if (this.maxIndex === 0) return;
       this.currentIndex = this.currentIndex <= 0 ? this.maxIndex : this.currentIndex - 1;
     },
-    go(codi) {
-      this.$router.push({ name: "patrimoni", query: { id: codi } });
-    },
-    getImatge(el) {
-      if (!el.images || !el.images.length) return null;
-      return el.images[0].split("|")[0];
+    go(id) {
+      this.$router.push({ name: "patrimoni", query: { id } });
     }
   },
 };
@@ -240,39 +232,9 @@ h1 {
   transition: transform 0.5s ease;
 }
 
-.card {
-  width: 240px;
-  background: white;
-  border-radius: 12px;
-  padding: 12px;
-  cursor: pointer;
+.carousel-card-fix {
+  width: 240px !important;
   flex-shrink: 0;
-  transition: transform 0.3s;
-}
-
-.card:hover {
-  transform: translateY(-6px);
-}
-
-.img {
-  height: 140px;
-  border-radius: 8px;
-  overflow: hidden;
-  background: #eee;
-}
-
-.img img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.placeholder {
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #777;
 }
 
 .nav {
