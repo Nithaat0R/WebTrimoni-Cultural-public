@@ -17,13 +17,33 @@ Abans de començar, assegura't de tenir instal·lat:
 
 ### 📦 Pas 1: Clonar el repositori
 Descarrega el codi font a la teva màquina local:
-```bash
-git clone [https://github.com/](https://github.com/)[el-teu-usuari]/[el-teu-repo].git
-cd [el-teu-repo]´´´
 
-### 2. Configuració del Front-end (Vue.js)
+Bash:
+git clone [https://github.com/](https://github.com/)[el-teu-usuari]/[el-teu-repo].git
+cd [el-teu-repo]
+
+### 💻 Pas 2: Configuració del Front-end (Vue.js)
 Navega fins a la carpeta del front-end per instal·lar les dependències i aixecar el servei:
-```bash
+
+Bash:
 cd front-end
 npm install
 npm run dev
+Nota: Un cop executat, la terminal et retornarà un enllaç (ex: http://localhost:5173) per accedir a la interfície web.
+
+### ⚙️ Pas 3: Configuració del Back-end (Spring Boot)
+En una nova terminal, situa't a la carpeta arrel del projecte i executa la següent comanda per aixecar el servidor:
+
+Bash:
+./mvnw spring-boot:run
+Això activarà la lògica de negoci i permetrà la comunicació amb l'API.
+
+### 🛠️ Tecnologies principals
+Back-end: Java 17 / Spring Boot
+
+Front-end: Vue.js
+
+Font de dades: API de Patrimoni Cultural de la Diputació de Barcelona
+
+### 📝 Notes addicionals
+Les funcionalitats d'interactivitat (comptes d'usuari i comentaris) requereixen que tant el front-end com el back-end estiguin executant-se simultàniament.
