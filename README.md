@@ -19,7 +19,7 @@ Abans de començar, assegura't de tenir instal·lat:
 Descarrega el codi font a la teva màquina local:
 ```bash
 git clone [https://github.com/](https://github.com/)[el-teu-usuari]/[el-teu-repo].git
-cd [el-teu-repo]
+cd [el-teu-repo]´´´
 
 ### 2. Configuració del Front-end (Vue.js)
 Navega fins a la carpeta del front-end per instal·lar les dependències i aixecar el servei:
