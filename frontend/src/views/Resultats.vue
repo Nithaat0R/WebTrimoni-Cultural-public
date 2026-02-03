@@ -23,11 +23,10 @@
 import axios from "axios";
 import PatrimoniCard from "@/components/PatrimoniCard.vue";
 
+// En Resultats.vue
 export default {
   name: "Resultats",
-  components: {
-    PatrimoniCard
-  },
+  components: { PatrimoniCard },
   data() {
     return {
       query: "",
@@ -35,13 +34,25 @@ export default {
       loading: false,
     };
   },
+  // 1. Mantenemos el mounted para la carga inicial
   mounted() {
-    this.query = this.$route.query.q;
-    if (this.query) {
-      this.cerca();
+    this.actualitzarIBuscar();
+  },
+  // 2. Añadimos un watcher para detectar cambios en la URL sin salir de la página
+  watch: {
+    '$route.query.q': {
+      handler(novaQuery) {
+        this.actualitzarIBuscar();
+      }
     }
   },
   methods: {
+    actualitzarIBuscar() {
+      this.query = this.$route.query.q;
+      if (this.query) {
+        this.cerca();
+      }
+    },
     async cerca() {
       this.loading = true;
       try {
@@ -55,12 +66,8 @@ export default {
         this.loading = false;
       }
     },
-
     go(id) {
-      this.$router.push({
-        name: "patrimoni",
-        query: { id },
-      });
+      this.$router.push({ name: "patrimoni", query: { id } });
     }
   },
 };

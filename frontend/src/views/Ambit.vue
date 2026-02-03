@@ -24,11 +24,11 @@ export default {
     return {
       // Ámbitos principales del Patrimonio Cultural
       ambits: [
-        { nom: "Patrimoni immoble", img: "/img/ambits/arqueologic.jpg" },
-        { nom: "Patrimoni moble", img: "/img/ambits/arquitectonic.jpg" },
-        { nom: "Patrimoni documental", img: "/img/ambits/etnologic.jpg" },
-        { nom: "Patrimoni immaterial", img: "/img/ambits/historic.jpg" },
-        { nom: "Patrimoni natural", img: "/img/ambits/paleontologic.jpg" }
+        { nom: "Patrimoni immoble", img: "/img/ambits/immoble.jpg" },
+        { nom: "Patrimoni moble", img: "/img/ambits/moble.jpg" },
+        { nom: "Patrimoni documental", img: "/img/ambits/documental.jpg" },
+        { nom: "Patrimoni immaterial", img: "/img/ambits/immaterial.jpg" },
+        { nom: "Patrimoni natural", img: "/img/ambits/natural.jpg" }
       ],
     };
   },
