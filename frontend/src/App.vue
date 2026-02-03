@@ -8,7 +8,7 @@
         <nav class="menu">
           <button @click="$router.push('/')">INICI</button>
           <button @click="$router.push('/comarques')">COMARCA</button>
-          <button @click="$router.push('/segles')">SEGLE</button>
+          <button @click="$router.push('/ambit')">ÀMBIT</button>
           <button @click="$router.push('/estils')">ESTIL</button>
         </nav>
       </div>

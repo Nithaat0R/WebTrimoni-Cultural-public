@@ -3,7 +3,7 @@ import Home from "@/views/Home.vue";
 import Resultats from "@/views/Resultats.vue";
 import InfoPatrimoni from "@/views/InfoPatrimoni.vue";
 import Comarques from "@/views/Comarques.vue";
-import Segles from "@/views/Segles.vue"
+import Ambit from "@/views/Ambit.vue"
 import Estils from "@/views/Estils.vue"
 import Filtre from "@/views/Filtre.vue";
 import ZonaPersonal from "@/views/ZonaPersonal.vue"
@@ -34,9 +34,9 @@ const routes = [
     props: true,
   },
   {
-    path: "/segles",
-    name: "segles",
-    component: Segles,
+    path: "/ambit",
+    name: "ambit",
+    component: Ambit,
     props: true,
   },
   {

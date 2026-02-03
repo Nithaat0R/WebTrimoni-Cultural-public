@@ -23,8 +23,8 @@ public class FilterController {
                 case "comarca":
                     url = "https://do.diba.cat/api/dataset/patrimoni_cultural/ord-titol/asc/camp-rel_comarca/" + data;
                     break;
-                case "segle":
-                    url = "https://do.diba.cat/api/dataset/patrimoni_cultural/ord-titol/asc/camp-centuria-like/" + data;
+                case "ambit":
+                    url = "https://do.diba.cat/api/dataset/patrimoni_cultural/ord-titol/asc/camp-ambit/" + data;
                     break;
                 case "estil":
                     url = "https://do.diba.cat/api/dataset/patrimoni_cultural/ord-titol/asc/camp-estil-like/" + data;

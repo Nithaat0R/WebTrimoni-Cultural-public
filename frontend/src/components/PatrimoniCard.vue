@@ -37,7 +37,7 @@ export default {
   methods: {
     handleClick() {
       // Emitimos un evento al padre para que él decida qué hacer (navegar)
-      this.$emit("click", this.patrimoni.id);
+      this.$emit("select", this.patrimoni.id);
     }
   }
 };

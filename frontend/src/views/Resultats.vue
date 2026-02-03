@@ -13,7 +13,7 @@
         v-for="el in resultats"
         :key="el.id"
         :patrimoni="el"
-        @click="go"
+        @select="go"
       />
     </div>
   </div>

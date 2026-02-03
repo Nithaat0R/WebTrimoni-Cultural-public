@@ -18,7 +18,7 @@
             :key="el.id" 
             :patrimoni="el" 
             class="carousel-card-fix"
-            @click="go"
+            @select="go"
           />
         </div>
       </div>
@@ -35,7 +35,7 @@
           v-for="el in recomanats" 
           :key="el.id" 
           :patrimoni="el" 
-          @click="go"
+          @select="go"
         />
       </div>
 
@@ -56,7 +56,7 @@
           v-for="el in favorits" 
           :key="el.id" 
           :patrimoni="el" 
-          @click="go"
+          @select="go"
         />
       </div>
 
